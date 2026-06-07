@@ -27,6 +27,30 @@
 
         .heading-font { font-family: 'Syncopate', sans-serif; }
 
+        /* MOBILE PERFORMANCE - Disable heavy animations globally */
+        @media (max-width: 768px) {
+            * {
+                animation: none !important;
+                transition: none !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            body {
+                -webkit-animation: none !important;
+                -moz-animation: none !important;
+            }
+        }
+
+        /* Respect user's motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
         /* ===== MOVING GOLD BACKGROUND EFFECT ===== */
         .static-bg {
             position: fixed; inset: 0; z-index: -1;
@@ -37,11 +61,14 @@
             position: absolute;
             border-radius: 50%;
             filter: blur(100px);
-            opacity: 0.7;
+            opacity: 0.5;
             animation: floatOrb 20s infinite alternate ease-in-out;
             pointer-events: none;
             will-change: transform;
             transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            contain: layout style paint;
         }
         .orb-1 {
             width: 45vw; height: 45vw;
@@ -62,7 +89,7 @@
             100% { transform: translate3d(-5%, 10%, 0) scale(0.9); }
         }
 
-        /* Mobile - bigger and more visible orbs */
+        /* Mobile - keep blur but lighter + static */
         @media (max-width: 768px) {
             .orb-1 {
                 width: 70vw; height: 70vw;
@@ -75,25 +102,25 @@
                 bottom: -20%; right: -20%;
             }
             .bg-orb {
-                filter: blur(100px);
+                filter: blur(40px);
                 animation: none !important;
             }
         }
 
-        /* Small mobile - even more visible, NO animations */
+        /* Small mobile - lighter blur, static */
         @media (max-width: 480px) {
             .orb-1 {
                 width: 80vw; height: 80vw;
                 background: rgba(212, 175, 55, 0.40);
-                top: -30%; left: -30%;
+                top: -10%; left: -10%;
             }
             .orb-2 {
                 width: 75vw; height: 75vw;
                 background: rgba(212, 175, 55, 0.35);
-                bottom: -30%; right: -30%;
+                bottom: -10%; right: -10%;
             }
             .bg-orb {
-                filter: opacity(0.5) blur(50px);
+                filter: blur(35px) opacity(0.26);
                 animation: none !important;
             }
         }
@@ -120,7 +147,7 @@
             background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
             display: flex; align-items: center; justify-content: center;
             position: relative;
-           
+            
             transition: transform 0.3s;
             margin-bottom: 20px;
         }
