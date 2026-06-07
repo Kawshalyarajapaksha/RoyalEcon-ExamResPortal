@@ -76,11 +76,11 @@
             }
             .bg-orb {
                 filter: blur(100px);
-                
+                animation: none !important;
             }
         }
 
-        /* Small mobile - even more visible */
+        /* Small mobile - even more visible, NO animations */
         @media (max-width: 480px) {
             .orb-1 {
                 width: 80vw; height: 80vw;
@@ -94,7 +94,7 @@
             }
             .bg-orb {
                 filter: blur(100px);
-                
+                animation: none !important;
             }
         }
 
@@ -176,6 +176,13 @@
             60% { transform: translateY(-7px); }
         }
 
+        /* Disable animations on mobile */
+        @media (max-width: 768px) {
+            .scroll-down-btn {
+                animation: none;
+            }
+        }
+
         /* ===== FADE-IN ON SCROLL (REVEAL) ===== */
         .reveal {
             opacity: 0;
@@ -197,6 +204,19 @@
             border-color: rgba(212,175,55,0.35);
             transform: translateY(-6px);
             background: rgba(212,175,55,0.03);
+        }
+
+        /* Mobile optimization - remove transitions for smooth performance */
+        @media (max-width: 768px) {
+            .reveal {
+                transition: none;
+            }
+            .luxury-card {
+                transition: none;
+            }
+            .luxury-card:hover {
+                transform: none;
+            }
         }
 
         .page { display: none; min-height: 100vh; }
@@ -737,8 +757,8 @@
                 <button class="back-btn" style="margin-bottom:0" onclick="goToStep('city')">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </button>
-                <button class="continue-btn" id="btn-batch" onclick="goToStep('index')">
-                    View Index <i class="fa-solid fa-arrow-right"></i>
+                <button class="continue-btn" id="btn-batch" onclick="goToResults()">
+                    View Results <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
         </div>
@@ -918,6 +938,11 @@ function goToStep(step) {
         renderIndex();
     }
     window.scrollTo({ top: 160, behavior: 'smooth' });
+}
+
+function goToResults() {
+    if (!selectedCity || !selectedBatch) return;
+    window.location.href = `results.html?city=${encodeURIComponent(selectedCity)}&batch=${encodeURIComponent(selectedBatch)}`;
 }
 
 function updateBreadcrumb() {
