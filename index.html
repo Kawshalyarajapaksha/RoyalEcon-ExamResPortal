@@ -40,6 +40,9 @@
             opacity: 7;
             animation: floatOrb 20s infinite alternate ease-in-out;
             pointer-events: none;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
         }
         .orb-1 {
             width: 45vw; height: 45vw;
@@ -55,9 +58,84 @@
         }
 
         @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(10%, 15%) scale(1.1); }
-            100% { transform: translate(-5%, 10%) scale(0.9); }
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(10%, 15%, 0) scale(1.1); }
+            100% { transform: translate3d(-5%, 10%, 0) scale(0.9); }
+        }
+
+        /* Tablet optimization - reduce animation complexity */
+        @media (max-width: 1024px) {
+            .bg-orb {
+                filter: blur(80px);
+                animation-duration: 18s !important;
+            }
+            .orb-1 {
+                background: rgba(212, 175, 55, 0.10);
+            }
+            .orb-2 {
+                background: rgba(212, 175, 55, 0.06);
+            }
+        }
+
+        /* Mobile optimization - significant performance improvements */
+        @media (max-width: 768px) {
+            .bg-orb {
+                filter: blur(60px);
+                opacity: 4;
+                animation-duration: 15s !important;
+            }
+            .orb-1 {
+                width: 60vw; height: 60vw;
+                background: rgba(212, 175, 55, 0.08);
+            }
+            .orb-2 {
+                width: 55vw; height: 55vw;
+                background: rgba(212, 175, 55, 0.05);
+                animation-duration: 20s !important;
+            }
+        }
+
+        /* Small mobile devices - disable complex animations */
+        @media (max-width: 480px) {
+            .bg-orb {
+                animation: staticFloat 8s ease-in-out infinite !important;
+                filter: blur(50px);
+                opacity: 3;
+            }
+        }
+
+        /* Small mobile devices - disable complex animations */
+        @media (max-width: 480px) {
+            .bg-orb {
+                animation: staticFloat 8s ease-in-out infinite !important;
+                filter: blur(50px);
+                opacity: 3;
+            }
+        }
+
+        /* Static subtle float for very small screens */
+        @keyframes staticFloat {
+            0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(5%, 8%, 0) scale(1.05); }
+        }
+
+        /* Low performance mode - for slow connections on mobile */
+        body.low-performance-mode .bg-orb {
+            animation: none !important;
+            opacity: 2;
+            filter: blur(40px);
+        }
+
+        body.low-performance-mode .scroll-down-btn {
+            animation: none !important;
+        }
+
+        body.low-performance-mode .luxury-card {
+            transition: none;
+        }
+
+        body.low-performance-mode .reveal {
+            transition: none;
         }
 
         /* ===== HERO SECTION (FULL SCREEN) ===== */
@@ -346,9 +424,15 @@
 
             .main-title { font-size: 2.8rem !important; }
             
-            .static-bg { background: radial-gradient(circle at center, #1a1608 0%, #070707 70%); }
-            .bg-orb { opacity: 0.5 !important; }
+            .static-bg { background: radial-gradient(circle at center, #1a1608 10%, #070707 100%); }
+            .bg-orb { opacity: 0.9 !important; }
             
+            @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 15%) scale(1.1); }
+            100% { transform: translate(-5%, 10%) scale(0.9); }
+            }
+
             nav { padding: 20px; }
             nav .logo { font-size: 1.1rem; }
             .btn-admin { padding: 6px 12px; font-size: 0.7rem; }
@@ -359,6 +443,20 @@
             .rank-card-new { min-width: 220px; } 
         }
     </style>
+    <script>
+        // Performance detection for mobile devices
+        function optimizeForMobile() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isSlowConnection = navigator.connection?.effectiveType === '4g' || navigator.connection?.effectiveType === '3g';
+            const mediaQueryMobile = window.matchMedia("(max-width: 768px)").matches;
+            
+            if ((isMobile || mediaQueryMobile) && isSlowConnection) {
+                document.documentElement.style.setProperty('--reduce-animations', '1');
+                document.body.classList.add('low-performance-mode');
+            }
+        }
+        optimizeForMobile();
+    </script>
 </head>
 <body>
 
