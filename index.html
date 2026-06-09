@@ -125,16 +125,16 @@
             }
         }
 
-        /* ===== HERO SECTION (FULL SCREEN) ===== */
-        .hero-fullscreen {
-            min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            padding: 80px 24px;
-        }
+    /* ===== HERO SECTION (FULL SCREEN) ===== */
+    .hero-fullscreen {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 80px 24px 80px; /* ← bottom 80px කරන්න */
+    }
 
         @keyframes goldPulse {
             0% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
@@ -181,7 +181,7 @@
         /* ===== SCROLL DOWN BUTTON ===== */
         .scroll-down-btn {
             position: absolute;
-            bottom: 40px;
+            bottom: 20px;
             background: transparent;
             border: 1px solid rgba(212,175,55,0.3);
             color: var(--gold);
@@ -198,17 +198,18 @@
             color: #fff;
         }
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-15px); }
-            60% { transform: translateY(-7px); }
-        }
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }  /* ← -15px → -10px */
+    60% { transform: translateY(-5px); }   /* ← -7px → -5px */
+}
 
         /* Disable animations on mobile */
         @media (max-width: 768px) {
-            .scroll-down-btn {
-                animation: none;
-            }
-        }
+    .scroll-down-btn {
+        /* animation: none; ← මේ line delete කරන්න */
+        bottom: 20px;
+    }
+}
 
         /* ===== FADE-IN ON SCROLL (REVEAL) ===== */
         .reveal {
@@ -449,6 +450,14 @@
             
             .rank-card-new { min-width: 220px; } 
         }
+        /* ===== FADE TRANSITION ===== */
+        body {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        body.page-loaded { opacity: 1; }
+        body.page-transition { opacity: 0 !important; }
+
     </style>
 </head>
 <body>
@@ -498,7 +507,7 @@
 
         <section id="exam-access-section" class="w-full max-w-4xl px-6 mb-16 reveal pt-10">
             <p class="text-[9px] font-black tracking-[0.5em] uppercase text-white/20 mb-3">Your Gateway</p>
-            <h2 class="heading-font text-3xl md:text-4xl font-black gold-text mb-10">THE SOVEREIGN PORTAL</h2>
+            <h2 class="heading-font text-3xl md:text-4xl font-black gold-text mb-10">THE Examination PORTAL</h2>
 
             <div class="luxury-card p-10 md:p-14 text-left" style="position:relative;overflow:hidden;">
                 <div style="position:absolute;top:0;right:0;width:180px;height:180px;background:radial-gradient(ellipse at top right,rgba(212,175,55,0.06),transparent 70%);pointer-events:none;"></div>
@@ -509,18 +518,18 @@
                             <i class="fa-solid fa-file-signature" style="font-size:9px;color:var(--gold);"></i>
                             <span style="font-size:8px;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:rgba(212,175,55,0.65);">Examination Portal</span>
                         </div>
-                        <h3 class="heading-font text-lg mb-4 gold-text">The Assessment Hub</h3>
+                        <h3 class="heading-font text-lg mb-4 gold-text">The Performance Hub</h3>
                         <p class="text-white/30 text-xs leading-relaxed mb-6" style="max-width:320px;">
-                            Access your comprehensive exam dashboard — mega tests, unit papers, marking schemes, and detailed result analytics.
+                            Access your comprehensive exam dashboard - Ranking Test marks, view class ranks and and analyze your performance growth over time.
                         </p>
                         <div style="display:flex;flex-direction:column;gap:10px;">
                             <div style="display:flex;align-items:center;gap:10px;">
                                 <i class="fa-solid fa-pen-nib" style="font-size:10px;color:rgba(212,175,55,0.4);width:16px;"></i>
-                                <span style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;">Live Mega Tests & Unit Exams</span>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;">Continuous Assessment Marks</span>
                             </div>
                             <div style="display:flex;align-items:center;gap:10px;">
                                 <i class="fa-solid fa-file-circle-check" style="font-size:10px;color:rgba(212,175,55,0.4);width:16px;"></i>
-                                <span style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;">Digital Answer Scripts & Schemes</span>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;">Historical Exam Records</span>
                             </div>
                             <div style="display:flex;align-items:center;gap:10px;">
                                 <i class="fa-solid fa-trophy" style="font-size:10px;color:rgba(212,175,55,0.4);width:16px;"></i>
@@ -718,8 +727,8 @@
         <button class="back-btn" onclick="goHome()">
             <i class="fa-solid fa-arrow-left"></i> Back to Home
         </button>
-        <p class="text-[9px] font-black tracking-[0.5em] uppercase text-white/20 mb-3">Premium Archive</p>
-        <h1 class="heading-font text-4xl md:text-6xl font-black gold-text mb-4">EMPIRE PORTAL</h1>
+        <p class="text-[9px] font-black tracking-[0.5em] uppercase text-white/20 mb-3">Royal Archive</p>
+        <h1 class="heading-font text-4xl md:text-6xl font-black gold-text mb-4">EXAM PORTAL</h1>
         <p class="text-white/20 text-xs tracking-[0.3em] uppercase mb-2">Select your city & batch to access the index</p>
     </div>
 
@@ -729,7 +738,7 @@
             <div class="bc-sep">›</div>
             <div class="bc-item" id="bc-batch">Batch</div>
             <div class="bc-sep">›</div>
-            <div class="bc-item" id="bc-index">Index</div>
+            <div class="bc-item" id="bc-index">Results</div>
         </div>
 
         <div class="step active" id="step-city">
@@ -744,7 +753,7 @@
                 <div class="select-card" onclick="selectCity('Rambukkana')">
                     <div class="select-card-icon"><i class="fa-solid fa-location-dot"></i></div>
                     <div class="select-card-name">Rambukkana</div>
-                    <div class="select-card-sub">Kegalle District</div>
+                    <div class="select-card-sub">Sabaragamuwa Province</div>
                 </div>
                 <div class="select-card" onclick="selectCity('Matale')">
                     <div class="select-card-icon"><i class="fa-solid fa-location-dot"></i></div>
@@ -1005,6 +1014,38 @@ function renderIndex(query = '') {
         </div>
     `).join('');
 }
+// Navigation Controls - Fade Effect
+document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        // බාහිර ලින්ක් හෝ hash (#) ලින්ක් නම් අතහැර දමන්න
+        if (this.hostname === window.location.hostname && !this.hash) {
+            e.preventDefault();
+            let target = this.href;
+            
+            // Fade-out එක ක්‍රියාත්මක කිරීම
+            document.body.classList.add('page-transition');
+            document.body.classList.remove('page-loaded');
+            
+            // ටික වෙලාවකට පසු පිටුව මාරු කිරීම
+            setTimeout(() => {
+                window.location.href = target;
+            }, 400); // 0.4s කාලය
+        }
+    });
+    
+});
+
+// පිටුවට ඇතුළු වන විට Fade-in වීම
+window.addEventListener('pageshow', function() {
+    document.body.classList.remove('page-transition');
+    document.body.classList.add('page-loaded');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    requestAnimationFrame(function() {
+        document.body.classList.add('page-loaded');
+    });
+});
 </script>
 </body>
 </html>
