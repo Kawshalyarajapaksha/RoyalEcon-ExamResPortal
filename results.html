@@ -2,21 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ROYAL ECON | Results & Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@200;400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+
     <style>
-        /* ===== SHARED DESIGN TOKENS (synced with index.html) ===== */
+        /* ===== DESIGN TOKENS — synced with index.html ===== */
         :root {
             --gold: #D4AF37;
             --royal-black: #070707;
             --gold-dim: rgba(212,175,55,0.15);
-            --gold-glow: 0 0 20px rgba(212,175,55,0.5), 0 0 40px rgba(212,175,55,0.3);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background: var(--royal-black);
@@ -25,160 +31,262 @@
             overflow-x: hidden;
         }
 
-        .heading-font { font-family: 'Syncopate', sans-serif; }
-
-        /* Respect user's motion preferences */
+        /* Reduced motion */
         @media (prefers-reduced-motion: reduce) {
-            * { animation: none !important; transition: none !important; }
-        }
-
-        /* Mobile performance */
-        @media (max-width: 768px) {
             * {
                 animation: none !important;
                 transition: none !important;
-                box-shadow: none !important;
-                text-shadow: none !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
             }
         }
 
-        /* ===== MOVING GOLD BACKGROUND (identical to index) ===== */
+        /* BACKGROUND ORBS - Mobile optimized */
         .static-bg {
-            position: fixed; inset: 0; z-index: -1;
+            position: fixed;
+            inset: 0;
+            z-index: -1;
             background: var(--royal-black);
             overflow: hidden;
         }
+
         .bg-orb {
-            position: absolute; border-radius: 50%;
-            filter: blur(100px); opacity: 0.5;
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.5;
             animation: floatOrb 20s infinite alternate ease-in-out;
-            pointer-events: none; will-change: transform;
-            transform: translate3d(0,0,0);
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            pointer-events: none;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
             contain: layout style paint;
         }
+
         .orb-1 {
-            width: 45vw; height: 45vw;
-            background: rgba(212,175,55,0.25);
-            top: -10%; left: -10%;
+            width: 45vw;
+            height: 45vw;
+            background: rgba(212, 175, 55, 0.25);
+            top: -10%;
+            left: -10%;
         }
+
         .orb-2 {
-            width: 40vw; height: 40vw;
-            background: rgba(212,175,55,0.20);
-            bottom: -10%; right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: rgba(212, 175, 55, 0.20);
+            bottom: -10%;
+            right: -10%;
             animation-duration: 25s;
             animation-direction: alternate-reverse;
         }
+
         @keyframes floatOrb {
-            0%   { transform: translate3d(0,0,0) scale(1); }
-            50%  { transform: translate3d(10%,15%,0) scale(1.1); }
-            100% { transform: translate3d(-5%,10%,0) scale(0.9); }
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            50% {
+                transform: translate3d(10%, 15%, 0) scale(1.1);
+            }
+            100% {
+                transform: translate3d(-5%, 10%, 0) scale(0.9);
+            }
         }
 
+        /* Mobile orb adjustments */
         @media (max-width: 768px) {
-            .orb-1 { width:70vw; height:70vw; background:rgba(212,175,55,0.35); top:-20%; left:-20%; }
-            .orb-2 { width:65vw; height:65vw; background:rgba(212,175,55,0.30); bottom:-20%; right:-20%; }
-            .bg-orb { filter:blur(40px); animation:none !important; }
-            .static-bg { background:radial-gradient(circle at center,#1a1608 15%,#070707 120%); }
+            .orb-1 {
+                width: 70vw;
+                height: 70vw;
+                background: rgba(212, 175, 55, 0.35);
+                top: -20%;
+                left: -20%;
+            }
+            .orb-2 {
+                width: 65vw;
+                height: 65vw;
+                background: rgba(212, 175, 55, 0.30);
+                bottom: -20%;
+                right: -20%;
+            }
+            .bg-orb {
+                filter: blur(40px);
+            }
+            .static-bg {
+                background: radial-gradient(circle at center, #1a1608 15%, #070707 120%);
+            }
         }
+
         @media (max-width: 480px) {
-            .orb-1 { width:80vw; height:80vw; background:rgba(212,175,55,0.40); top:-10%; left:-10%; }
-            .orb-2 { width:75vw; height:75vw; background:rgba(212,175,55,0.35); bottom:-10%; right:-10%; }
-            .bg-orb { filter:blur(35px) opacity(0.26); animation:none !important; }
+            .orb-1 {
+                width: 80vw;
+                height: 80vw;
+                background: rgba(212, 175, 55, 0.40);
+                top: -10%;
+                left: -10%;
+            }
+            .orb-2 {
+                width: 75vw;
+                height: 75vw;
+                background: rgba(212, 175, 55, 0.35);
+                bottom: -10%;
+                right: -10%;
+            }
+            .bg-orb {
+                filter: blur(35px) opacity(0.26);
+            }
         }
 
-        /* ===== NAVBAR (identical to index) ===== */
+        /* ===== NAVBAR — fully responsive ===== */
         nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 30px 40px; position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
-            background: linear-gradient(to bottom, rgba(3,1,7,0.95) 0%, rgba(3,1,7,0.5) 60%, transparent 100%);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            -webkit-mask-image: linear-gradient(to bottom, black 50%, rgba(0,0,0,0.8) 70%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 50%, rgba(0,0,0,0.8) 70%, transparent 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(3, 1, 7, 0.95) 0%, rgba(3, 1, 7, 0.5) 60%, transparent 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            -webkit-mask-image: linear-gradient(to bottom, black 50%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 50%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);
         }
+
         nav .logo {
-            font-weight: 900; font-size: 1.4rem;
-            text-decoration: none; color: #ffffff; letter-spacing: 0.5px;
-        }
-        nav .logo span {
-            background: linear-gradient(135deg,#BF953F,#FCF6BA,#B38728);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .btn-admin {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-            color: #ffffff; padding: 8px 16px; font-size: 0.78rem;
-            border-radius: 6px; font-weight: 600; text-decoration: none;
-        }
-
-        @media (max-width: 768px) {
-            nav { padding: 20px; }
-            nav .logo { font-size: 1.1rem; }
-            .btn-admin { padding: 6px 12px; font-size: 0.7rem; }
-        }
-
-        /* ===== FOOTER (identical to index) ===== */
-        footer {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 45px 40px 35px 40px;
-            background: linear-gradient(to top, rgba(3,1,7,0.95) 0%, rgba(3,1,7,0.4) 60%, transparent 100%);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            font-size: 0.8rem;
-        }
-        footer .left-side {
-            color: rgba(255,255,255,0.35); text-transform: uppercase;
-            font-size: 0.75rem; letter-spacing: 1.5px; font-weight: 700;
-        }
-        footer .right-side { color: rgba(255,255,255,0.5); text-align: right; }
-        footer .right-side span {
-            font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 1rem;
+            font-weight: 900;
+            font-size: 1.4rem;
+            text-decoration: none;
+            color: #ffffff;
             letter-spacing: 0.5px;
-            background: linear-gradient(135deg,#BF953F,#FCF6BA,#B38728);
-            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: inline-block; vertical-align: middle;
         }
+
+        nav .logo span {
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-admin {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            padding: 8px 16px;
+            font-size: 0.78rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-admin:active {
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+            nav .logo {
+                font-size: 1rem;
+            }
+            .btn-admin {
+                padding: 6px 12px;
+                font-size: 0.65rem;
+            }
+        }
+
+        /* ===== FOOTER — mobile stack ===== */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 45px 40px 35px;
+            background: linear-gradient(to top, rgba(3, 1, 7, 0.95) 0%, rgba(3, 1, 7, 0.4) 60%, transparent 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            font-size: 0.8rem;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        footer .left-side {
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        footer .right-side {
+            color: rgba(255, 255, 255, 0.5);
+            text-align: right;
+        }
+
+        footer .right-side span {
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
         footer .right-side .sub-dev {
-            display: block; font-size: 0.62rem; text-transform: uppercase;
-            letter-spacing: 1.2px; color: rgba(255,255,255,0.25);
-            margin-top: 2px; font-weight: 600;
-        }
-        @media (max-width: 768px) {
-            footer { flex-direction: column; text-align: center; gap: 20px; padding: 30px 20px 25px 20px; }
-            footer .right-side { text-align: center; }
+            display: block;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-top: 2px;
+            font-weight: 600;
         }
 
-        /* ===== FADE-IN REVEAL (same as index) ===== */
+        @media (max-width: 768px) {
+            footer {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+                padding: 30px 20px 25px;
+            }
+            footer .right-side {
+                text-align: center;
+            }
+            footer .left-side {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ===== REVEAL ON SCROLL — disabled on mobile for performance ===== */
         .reveal {
-            opacity: 0; transform: translateY(60px);
-            transition: all 0.8s cubic-bezier(0.5,0,0,1);
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        @media (max-width: 768px) { .reveal { transition: none; } }
 
-        /* ===== LUXURY CARD BASE ===== */
-        .luxury-card {
-            background: rgba(255,255,255,0.015);
-            border: 1px solid rgba(212,175,55,0.07);
-            border-radius: 28px;
-            transition: border-color 0.35s, transform 0.35s, background 0.35s;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
-        .luxury-card:hover {
-            border-color: rgba(212,175,55,0.35);
-            transform: translateY(-6px);
-            background: rgba(212,175,55,0.03);
-        }
+
         @media (max-width: 768px) {
-            .luxury-card { transition: none; }
-            .luxury-card:hover { transform: none; }
+            .reveal {
+                transition: none;
+                opacity: 1;
+                transform: none;
+            }
         }
 
         /* ===== PAGE LAYOUT ===== */
         .page-wrap {
             min-height: 100vh;
             padding-top: 110px;
-            padding-bottom: 0;
-            position: relative; z-index: 10;
+            position: relative;
+            z-index: 10;
         }
 
         .results-container {
@@ -187,598 +295,949 @@
             padding: 0 32px 80px;
         }
 
+        @media (max-width: 768px) {
+            .page-wrap {
+                padding-top: 90px;
+            }
+            .results-container {
+                padding: 0 20px 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-wrap {
+                padding-top: 80px;
+            }
+            .results-container {
+                padding: 0 16px 50px;
+            }
+        }
+
         /* ===== PAGE HEADER ===== */
         .page-header {
             text-align: center;
-            margin-bottom: 52px;
+            margin-bottom: 40px;
             padding-top: 16px;
         }
+
         .page-eyebrow {
-            font-size: 9px; font-weight: 800; letter-spacing: 0.5em;
-            text-transform: uppercase; color: rgba(255,255,255,0.2);
-            margin-bottom: 18px; display: block;
-        }
-        .page-title {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            font-weight: 900; line-height: 1.1;
-        }
-        .page-title span {
-            background: linear-gradient(135deg,#BF953F,#FCF6BA,#B38728);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .page-sub {
-            font-size: 11px; color: rgba(255,255,255,0.2);
-            letter-spacing: 0.3em; text-transform: uppercase;
-            margin-top: 14px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 18px;
+            display: block;
         }
 
-        /* ===== SEARCH BOX ===== */
+        .page-title {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(1.6rem, 5vw, 2.8rem);
+            font-weight: 900;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .page-title span {
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-sub {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 14px;
+            line-height: 1.4;
+        }
+
+        .gold-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 24px auto;
+        }
+
+        /* ===== CONTEXT PILL ===== */
+        .context-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 175, 55, 0.07);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(212, 175, 55, 0.65);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ===== SEARCH BOX — truly mobile friendly ===== */
         .search-wrap {
-            background: rgba(212,175,55,0.03);
-            border: 1px solid rgba(212,175,55,0.12);
+            background: rgba(212, 175, 55, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.12);
             border-radius: 20px;
             padding: 20px 24px;
-            display: flex; gap: 14px; align-items: center;
-            margin-bottom: 48px; flex-wrap: wrap;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
         }
-        .search-wrap .search-icon-inner {
-            color: rgba(212,175,55,0.4); font-size: 14px; flex-shrink: 0;
+
+        .search-icon-inner {
+            color: rgba(212, 175, 55, 0.4);
+            font-size: 14px;
+            flex-shrink: 0;
         }
+
         .search-wrap input {
-            flex: 1; min-width: 220px;
-            background: transparent; border: none;
-            color: white; font-size: 14px; outline: none;
+            flex: 1;
+            min-width: 180px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 15px;
+            outline: none;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 8px 0;
         }
-        .search-wrap input::placeholder { color: rgba(255,255,255,0.2); }
-        .search-wrap input:focus { outline: none; }
+
+        .search-wrap input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 13px;
+        }
+
         .search-divider {
-            width: 1px; height: 24px;
-            background: rgba(212,175,55,0.12); flex-shrink: 0;
-        }
-        @media (max-width: 600px) {
-            .search-wrap { flex-direction: column; align-items: stretch; }
-            .search-divider { display: none; }
+            width: 1px;
+            height: 24px;
+            background: rgba(212, 175, 55, 0.12);
+            flex-shrink: 0;
         }
 
         .search-btn {
-            background: linear-gradient(135deg,#BF953F,#D4AF37,#B38728);
-            color: #050505; border: none;
-            padding: 12px 28px; border-radius: 100px;
-            cursor: pointer; font-weight: 700;
+            background: linear-gradient(135deg, #BF953F, #D4AF37, #B38728);
+            color: #050505;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-weight: 700;
             font-family: 'Syncopate', sans-serif;
-            font-size: 9px; letter-spacing: 0.2em;
+            font-size: 9px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            transition: transform 0.25s, opacity 0.25s;
-            white-space: nowrap; flex-shrink: 0;
+            transition: transform 0.2s, opacity 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-height: 44px;
         }
-        .search-btn:hover { transform: scale(1.04); }
+
+        .search-btn:active {
+            transform: scale(0.96);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 600px) {
+            .search-wrap {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 18px;
+                gap: 16px;
+            }
+            .search-divider {
+                display: none;
+            }
+            .search-btn {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 10px;
+            }
+            .search-wrap input {
+                text-align: center;
+                font-size: 16px;
+                padding: 12px 0;
+            }
+            .search-icon-inner {
+                text-align: center;
+            }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold);
+            border-radius: 100px;
+            padding: 10px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast.toast-error {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .toast {
+                white-space: normal;
+                text-align: center;
+                font-size: 10px;
+                width: 90%;
+                border-radius: 40px;
+                padding: 12px 16px;
+                letter-spacing: 0.1em;
+            }
+        }
 
         /* ===== RESULTS SECTION ===== */
-        .results-section { display: none; }
-        .results-section.active { display: block; }
+        .results-section {
+            display: none;
+        }
 
-        /* Student header card */
-        .student-header {
-            background: rgba(212,175,55,0.04);
-            border: 1px solid rgba(212,175,55,0.12);
+        .results-section.active {
+            display: block;
+        }
+
+        /* ===== STUDENT LATEST CARD — fully responsive flex ===== */
+        .student-card-latest {
+            background: linear-gradient(145deg, rgba(212, 175, 55, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-left: 5px solid #D4AF37;
             border-radius: 24px;
-            padding: 28px 32px;
+            padding: 24px 20px;
             margin-bottom: 28px;
-            display: flex; align-items: center;
-            gap: 24px; flex-wrap: wrap;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        .student-avatar {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: linear-gradient(135deg,#111,#1c1c1c);
-            border: 2px solid rgba(212,175,55,0.2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: rgba(212,175,55,0.3); flex-shrink: 0;
+
+        .student-info-box h2 {
+            font-size: clamp(1.3rem, 5vw, 1.7rem);
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+            word-break: break-word;
         }
-        .student-info { flex: 1; }
-        .student-name {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(14px, 2.5vw, 20px);
-            font-weight: 900; margin-bottom: 6px;
-            background: linear-gradient(135deg,#BF953F,#FCF6BA,#B38728);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+
         .student-meta {
-            font-size: 10px; color: rgba(255,255,255,0.25);
-            letter-spacing: 0.25em; text-transform: uppercase;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 14px;
-            margin-bottom: 28px;
+        .student-meta span {
+            background: rgba(212, 175, 55, .08);
+            border: 1px solid rgba(212, 175, 55, .15);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, .7);
+            white-space: nowrap;
         }
-        .stat-card {
-            background: rgba(255,255,255,0.015);
-            border: 1px solid rgba(212,175,55,0.08);
-            border-radius: 18px;
-            padding: 20px 18px;
+
+        .latest-exam-tag {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .latest-badge {
+            background: #D4AF37;
+            color: #050505;
+            padding: 5px 14px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .latest-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .latest-stat {
             text-align: center;
-            transition: border-color 0.3s, background 0.3s;
-        }
-        .stat-card:hover {
-            border-color: rgba(212,175,55,0.25);
-            background: rgba(212,175,55,0.03);
-        }
-        .stat-label {
-            font-size: 9px; font-weight: 800;
-            letter-spacing: 0.25em; text-transform: uppercase;
-            color: rgba(212,175,55,0.55); margin-bottom: 10px;
-        }
-        .stat-value {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 22px; font-weight: 900;
-            background: linear-gradient(135deg,#BF953F,#FCF6BA,#B38728);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            min-width: 70px;
         }
 
-        /* Results table */
+        .latest-stat span {
+            display: block;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, .5);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .latest-stat h1 {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            font-weight: 900;
+            color: #D4AF37;
+        }
+
+        .latest-divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, .1);
+        }
+
+        @media (max-width: 768px) {
+            .student-card-latest {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 20px;
+            }
+            .latest-stats {
+                width: 100%;
+                justify-content: space-around;
+                gap: 8px;
+            }
+            .latest-stat h1 {
+                font-size: 1.6rem;
+            }
+            .latest-divider {
+                display: none;
+            }
+            .student-meta span {
+                font-size: 0.65rem;
+                white-space: normal;
+                word-break: keep-all;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .latest-stats {
+                gap: 12px;
+            }
+            .latest-stat {
+                min-width: 60px;
+            }
+            .student-info-box h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ===== TAB SYSTEM ===== */
+        .tab-wrap {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            color: rgba(255, 255, 255, 0.35);
+            padding: 10px 20px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'Syncopate', sans-serif;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #BF953F, #D4AF37, #B38728);
+            border-color: transparent;
+            color: #050505;
+        }
+
+        /* ===== RESULTS TABLE — horizontal scroll on mobile ===== */
         .table-container {
-            background: rgba(212,175,55,0.02);
-            border: 1px solid rgba(212,175,55,0.08);
+            background: rgba(212, 175, 55, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.08);
             border-radius: 20px;
             padding: 8px 0;
             margin-bottom: 28px;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
+
         .results-table {
-            width: 100%; border-collapse: collapse; font-size: 13px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 500px;
         }
+
         .results-table thead {
-            border-bottom: 1px solid rgba(212,175,55,0.12);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.12);
         }
+
         .results-table th {
-            padding: 14px 20px; text-align: left;
+            padding: 14px 16px;
+            text-align: left;
             font-family: 'Syncopate', sans-serif;
-            font-size: 8px; font-weight: 700;
-            color: rgba(212,175,55,0.5);
-            letter-spacing: 0.2em; text-transform: uppercase;
+            font-size: 8px;
+            font-weight: 700;
+            color: rgba(212, 175, 55, 0.5);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
+
         .results-table td {
-            padding: 14px 20px;
-            border-bottom: 1px solid rgba(212,175,55,0.04);
-            color: rgba(255,255,255,0.7);
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.04);
+            color: rgba(255, 255, 255, 0.7);
         }
-        .results-table tbody tr:last-child td { border-bottom: none; }
-        .results-table tbody tr:hover td { background: rgba(212,175,55,0.025); }
+
+        .results-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
         .exam-num {
             font-family: 'Syncopate', sans-serif;
-            font-size: 12px; font-weight: 700;
-            color: rgba(212,175,55,0.4);
-        }
-        .marks-cell { font-weight: 800; color: var(--gold); }
-        .grade-a { color: #4ade80; font-weight: 800; }
-        .grade-b { color: #fbbf24; font-weight: 800; }
-        .grade-c { color: #f97316; font-weight: 800; }
-        .grade-d { color: #ef4444; font-weight: 800; }
-        .rank-cell { font-weight: 800; color: rgba(255,255,255,0.85); }
-        @media (max-width: 768px) {
-            .results-table { font-size: 11px; }
-            .results-table th, .results-table td { padding: 10px 12px; }
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(212, 175, 55, 0.4);
         }
 
-        /* Chart */
+        .marks-cell {
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .grade-a {
+            color: #4ade80;
+            font-weight: 800;
+        }
+
+        .grade-b {
+            color: #fbbf24;
+            font-weight: 800;
+        }
+
+        .grade-c {
+            color: #f97316;
+            font-weight: 800;
+        }
+
+        .grade-s {
+            color: #60a5fa;
+            font-weight: 800;
+        }
+
+        .grade-w {
+            color: #ef4444;
+            font-weight: 800;
+        }
+
+        .rank-cell {
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .empty-row td {
+            text-align: center;
+            padding: 32px 20px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .results-table {
+                font-size: 11px;
+                min-width: 480px;
+            }
+            .results-table th,
+            .results-table td {
+                padding: 10px 12px;
+            }
+            .hide-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .results-table {
+                min-width: 420px;
+            }
+            .results-table th,
+            .results-table td {
+                padding: 8px 10px;
+                font-size: 10px;
+            }
+        }
+
+        /* ===== CHART — fully responsive canvas ===== */
         .chart-container {
-            background: rgba(255,255,255,0.012);
-            border: 1px solid rgba(212,175,55,0.08);
+            background: rgba(255, 255, 255, 0.012);
+            border: 1px solid rgba(212, 175, 55, 0.08);
             border-radius: 20px;
-            padding: 28px 28px 20px;
+            padding: 20px 16px;
             margin-bottom: 28px;
         }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
         .chart-title {
             font-family: 'Syncopate', sans-serif;
-            font-size: 14px; font-weight: 700;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
         }
+
         .chart-title span {
-            background: linear-gradient(135deg,#BF953F,#FCF6BA,#B38728);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        #examChart { max-height: 280px; }
 
-        /* Empty / No results */
+        #examChart {
+            max-height: 280px;
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .chart-container {
+                padding: 16px 12px;
+            }
+            #examChart {
+                max-height: 220px;
+            }
+        }
+
+        /* ===== NO RESULTS / LOADING ===== */
         .no-results {
-            text-align: center; padding: 80px 20px;
-            color: rgba(255,255,255,0.18);
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.18);
         }
+
         .no-results i {
-            font-size: 40px; opacity: 0.25;
-            margin-bottom: 20px; display: block;
+            font-size: 40px;
+            opacity: 0.25;
+            margin-bottom: 20px;
+            display: block;
             color: var(--gold);
         }
+
         .no-results p {
-            font-size: 11px; letter-spacing: 0.2em;
-            text-transform: uppercase; line-height: 1.8;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
-        /* Exam badge (matching index style) */
-        .exam-badge {
-            display: inline-block;
-            background: rgba(212,175,55,0.06);
-            border: 1px solid rgba(212,175,55,0.25);
-            color: var(--gold);
-            font-family: 'Syncopate', sans-serif;
-            font-size: 9px; font-weight: 700;
-            padding: 8px 20px; border-radius: 50px;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            margin-bottom: 0;
+        .spinner-wrap {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
         }
 
-        /* Gold divider */
-        .gold-divider {
-            width: 60px; height: 1px;
-            background: linear-gradient(90deg,transparent,var(--gold),transparent);
-            margin: 24px auto;
+        .spinner-wrap.active {
+            display: block;
         }
 
-        /* Context pill from URL params */
-        .context-pill {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(212,175,55,0.07); border: 1px solid rgba(212,175,55,0.18);
-            border-radius: 100px; padding: 6px 16px;
-            font-size: 9px; font-weight: 800;
-            letter-spacing: 0.2em; text-transform: uppercase;
-            color: rgba(212,175,55,0.65); margin-bottom: 32px;
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
         }
-        .context-pill i { font-size: 9px; }
 
-        /* ===== FADE TRANSITION ===== */
-        body {
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
-        body.page-loaded { opacity: 1; }
-        body.page-transition { opacity: 0 !important; }
-        
+
+        .spinner-label {
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(212, 175, 55, 0.4);
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20%,
+            60% {
+                transform: translateX(-6px);
+            }
+            40%,
+            80% {
+                transform: translateX(6px);
+            }
+        }
+
+        .search-wrap.shake {
+            animation: shake 0.4s ease;
+            border-color: rgba(239, 68, 68, 0.4) !important;
+        }
+
+        @keyframes shine {
+            0% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 25px 12px rgba(212, 175, 55, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+            }
+        }
+
+        .shine-active {
+            animation: shine 1.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
 
-<!-- Background orbs -->
+<div class="toast" id="toast"></div>
 <div class="static-bg">
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 </div>
 
-<!-- Navbar -->
 <nav>
     <a href="index.html" class="logo">ECON EXAM <span>UNIT</span></a>
-    <div class="nav-center"></div>
-    <div class="nav-right">
-        <a href="student-registration.html" class="btn-admin">Admin Login</a>
-    </div>
+    <div></div>
+    <a href="student-registration.html" class="btn-admin">Admin Login</a>
 </nav>
 
-<!-- Main -->
 <div class="page-wrap">
     <div class="results-container">
-
-        <!-- Page Header -->
         <div class="page-header reveal">
-            <span class="page-eyebrow">Royal Econ · Exam Portal</span>
+            <span class="page-eyebrow">Royal Econ · Student Portal</span>
             <h1 class="page-title">Exam <span>Results</span> &amp; Analysis</h1>
+            <div class="gold-divider"></div>
             <p class="page-sub">KEGALLE &nbsp;·&nbsp; RAMBUKKANA &nbsp;·&nbsp; MATALE &nbsp;·&nbsp; ONLINE</p>
         </div>
 
-        <!-- Context pill (city + batch from URL) -->
         <div style="text-align:center; margin-bottom:40px;" id="contextPillWrap"></div>
 
-        <!-- Search box -->
-        <div class="search-wrap reveal">
+        <div class="search-wrap reveal" id="searchWrap">
             <i class="fa-solid fa-magnifying-glass search-icon-inner"></i>
-            <input
-                type="text"
-                id="indexInput"
-                placeholder="Enter Your Index Number"
-                autocomplete="off"
-            >
+            <input type="text" id="indexInput" placeholder="Enter your Index Number  (e.g.  2026/001)" autocomplete="off">
             <div class="search-divider"></div>
-            <button class="search-btn" onclick="searchResults()">
-                <i class="fa-solid fa-magnifying-glass"></i>&nbsp; Search
-            </button>
+            <button class="search-btn" id="searchBtn"> <i class="fa-solid fa-magnifying-glass"></i>&nbsp; Search</button>
         </div>
 
-        <!-- Results section -->
+        <div class="spinner-wrap" id="spinnerWrap">
+            <div class="spinner"></div>
+            <div class="spinner-label">Fetching results...</div>
+        </div>
+
         <div id="resultsSection" class="results-section">
-
-            <!-- Student header -->
-            <div class="student-header reveal">
-                <div class="student-avatar">
-                    <i class="fa-solid fa-user"></i>
+            <div class="student-card-latest" id="latestExamCard">
+                <div class="latest-top">
+                    <div class="student-info-box">
+                        <h2 id="studentName">Student Name</h2>
+                        <div class="student-meta">
+                            <span id="studentIndex"><i class="fa-solid fa-id-card"></i> BS/26/001</span>
+                            <span id="studentCity"><i class="fa-solid fa-location-dot"></i> Kegalle</span>
+                            <span id="studentBatch"><i class="fa-solid fa-users"></i> 2026 Batch</span>
+                        </div>
+                        <div class="latest-exam-tag">
+                            <span id="latestExamType" class="latest-badge">RANKING EXAM</span>
+                            <span id="latestExamName">Ranking Exam 03</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="student-info">
-                    <div class="student-name" id="studentName">Student Name</div>
-                    <div class="student-meta" id="studentMeta">Index · Batch</div>
-                </div>
-                <span class="exam-badge" id="batchBadge">2026 Batch</span>
-            </div>
-
-            <!-- Stats -->
-            <div class="stats-grid reveal">
-                <div class="stat-card">
-                    <div class="stat-label">Latest Score</div>
-                    <div class="stat-value" id="latestScore">—</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Average</div>
-                    <div class="stat-value" id="avgScore">—</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Grade</div>
-                    <div class="stat-value" id="gradeValue">—</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total Exams</div>
-                    <div class="stat-value" id="totalExams">0</div>
+                <div class="latest-stats">
+                    <div class="latest-stat"><span>Marks</span><h1 id="latestMarks">95%</h1></div>
+                    <div class="latest-divider"></div>
+                    <div class="latest-stat"><span>Grade</span><h1 id="latestGrade">A</h1></div>
+                    <div class="latest-divider"></div>
+                    <div class="latest-stat"><span>Exam Rank</span><h1 id="latestRank">#2</h1></div>
+                    <div class="latest-divider"></div>
+                    <div class="latest-stat overall-rank"><span>Overall Rank</span><h1 id="overallRank">#1</h1></div>
                 </div>
             </div>
 
-            <!-- Table -->
+            <div class="tab-wrap reveal" id="tabWrap">
+                <button class="tab-btn active" id="tabRanking"> <i class="fa-solid fa-trophy"></i> Ranking Exams</button>
+            </div>
+
             <div class="table-container reveal">
                 <table class="results-table">
                     <thead>
-                        <tr>
-                            <th>Exam</th>
-                            <th>Date</th>
-                            <th>Subject</th>
-                            <th>Marks</th>
-                            <th>Grade</th>
-                            <th>Rank</th>
-                        </tr>
+                        <tr><th class="hide-mobile">#</th><th>Exam Name</th><th>Marks</th><th>Grade</th><th>Rank</th><th>Overall</th></tr>
                     </thead>
-                    <tbody id="tableBody">
-                        <tr><td colspan="6" style="text-align:center;padding:24px;color:rgba(255,255,255,0.2);font-size:11px;letter-spacing:0.2em;">LOADING&hellip;</td></tr>
-                    </tbody>
+                    <tbody id="tableBody"><tr class="empty-row"><td colspan="7">— No data —</td></tr></tbody>
                 </table>
             </div>
 
-            <!-- Chart -->
             <div class="chart-container reveal">
-                <div class="chart-title">Score <span>Progression</span></div>
+                <div class="chart-header"><div class="chart-title">Score <span>Progression</span></div></div>
                 <canvas id="examChart"></canvas>
             </div>
-
         </div>
 
-        <!-- No results / initial state -->
         <div id="noResults" class="no-results">
             <i class="fa-solid fa-chart-line"></i>
             <p>Enter your index number above<br>to view your exam results &amp; analysis</p>
         </div>
-
     </div>
 </div>
 
-<!-- Footer -->
 <footer>
     <div class="left-side">royal econ results portal</div>
-    <div class="right-side">
-        Powered by <span>INWEDSA</span>
-        <small class="sub-dev">web solutions</small>
-    </div>
+    <div class="right-side">Powered by <span>INWEDSA</span><small class="sub-dev"> web solutions</small></div>
 </footer>
 
 <script>
-    /* ===== REVEAL ON SCROLL ===== */
-    function initReveal() {
-        const els = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        els.forEach(el => observer.observe(el));
-    }
-    document.addEventListener('DOMContentLoaded', initReveal);
-
-    /* ===== URL PARAMS (city + batch from index.html) ===== */
-    const urlParams = new URLSearchParams(window.location.search);
-    const cityParam  = urlParams.get('city');
-    const batchParam = urlParams.get('batch');
-
-    if (cityParam || batchParam) {
-        const pillWrap = document.getElementById('contextPillWrap');
-        pillWrap.innerHTML = `
-            <span class="context-pill">
-                <i class="fa-solid fa-location-dot"></i>
-                ${cityParam || ''}
-                ${cityParam && batchParam ? '<i class="fa-solid fa-chevron-right" style="opacity:0.4"></i>' : ''}
-                ${batchParam || ''}
-            </span>`;
-    }
-
-    /* ===== SAMPLE DATA ===== */
-    const examData = {
-        '2026/001': {
-            name: 'Arjun Silva',
-            batch: '2026',
-            city: 'Kegalle',
-            exams: [
-                { num: 1, date: '2026-01-15', subject: 'Economics 101',    marks: 85, grade: 'A', rank: 3  },
-                { num: 2, date: '2026-02-20', subject: 'Micro Economics',   marks: 78, grade: 'B', rank: 8  },
-                { num: 3, date: '2026-03-25', subject: 'Macro Economics',   marks: 92, grade: 'A', rank: 1  },
-                { num: 4, date: '2026-04-30', subject: 'Economics Mock',    marks: 88, grade: 'A', rank: 2  },
-            ]
-        },
-        '2026/002': {
-            name: 'Priya Kumari',
-            batch: '2026',
-            city: 'Rambukkana',
-            exams: [
-                { num: 1, date: '2026-01-15', subject: 'Economics 101',    marks: 90, grade: 'A', rank: 1  },
-                { num: 2, date: '2026-02-20', subject: 'Micro Economics',   marks: 87, grade: 'A', rank: 3  },
-                { num: 3, date: '2026-03-25', subject: 'Macro Economics',   marks: 84, grade: 'B', rank: 5  },
-            ]
-        },
-        '2026/003': {
-            name: 'Raj Kumar',
-            batch: '2026',
-            city: 'Matale',
-            exams: [
-                { num: 1, date: '2026-01-15', subject: 'Economics 101',    marks: 72, grade: 'B', rank: 12 },
-                { num: 2, date: '2026-02-20', subject: 'Micro Economics',   marks: 75, grade: 'B', rank: 10 },
-            ]
-        }
-    };
-
-    let chartInstance = null;
-
-    function getGradeClass(grade) {
-        const map = { 'A': 'grade-a', 'B': 'grade-b', 'C': 'grade-c' };
-        return map[grade] || 'grade-d';
-    }
-
-    function searchResults() {
-        const indexNum = document.getElementById('indexInput').value.trim();
-        if (!indexNum) return;
-
-        const data = examData[indexNum];
-        const noRes = document.getElementById('noResults');
-        const sec   = document.getElementById('resultsSection');
-
-        if (!data) {
-            sec.classList.remove('active');
-            noRes.innerHTML = `
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <p>No results found for&nbsp;&nbsp;<strong style="color:var(--gold)">${indexNum}</strong><br>Please check your index number and try again.</p>`;
-            noRes.style.display = 'block';
-            return;
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cityParam = urlParams.get('city');
+        const batchParam = urlParams.get('batch');
+        if (cityParam || batchParam) {
+            document.getElementById('contextPillWrap').innerHTML = `<span class="context-pill"><i class="fa-solid fa-location-dot"></i> ${cityParam || ''} ${cityParam && batchParam ? '<i class="fa-solid fa-chevron-right"></i>' : ''} ${batchParam || ''}</span>`;
         }
 
-        noRes.style.display = 'none';
-        sec.classList.add('active');
+        let allExams = [];
+        let chartInst = null;
 
-        // Re-trigger reveals
-        sec.querySelectorAll('.reveal').forEach(el => {
-            el.classList.remove('active');
-            setTimeout(() => el.classList.add('active'), 80);
-        });
+        function getGrade(marks) {
+            if (marks >= 75) return 'A';
+            if (marks >= 65) return 'B';
+            if (marks >= 50) return 'C';
+            if (marks >= 35) return 'S';
+            return 'W';
+        }
+        function gradeClass(grade) {
+            const map = { A:'grade-a', B:'grade-b', C:'grade-c', S:'grade-s', W:'grade-w' };
+            return map[grade] || 'grade-w';
+        }
 
-        const exams   = data.exams;
-        const avgMark = Math.round(exams.reduce((s, e) => s + e.marks, 0) / exams.length);
-        const latest  = exams[exams.length - 1];
+        function showToast(msg, type = '') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast' + (type === 'error' ? ' toast-error' : '') + ' show';
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
 
-        document.getElementById('studentName').textContent = data.name;
-        document.getElementById('studentMeta').textContent = `${indexNum}  ·  ${data.city}  ·  ${data.batch} Batch`;
-        document.getElementById('batchBadge').textContent  = `${data.batch} Batch`;
-        document.getElementById('latestScore').textContent = latest.marks + '%';
-        document.getElementById('avgScore').textContent    = avgMark + '%';
-        document.getElementById('gradeValue').textContent  = latest.grade;
-        document.getElementById('totalExams').textContent  = exams.length;
+        function renderTable(exams) {
+            const tbody = document.getElementById('tableBody');
+            if (!exams.length) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="7">— No ranking exams found —</td></tr>';
+                return;
+            }
+            tbody.innerHTML = exams.map((ex, i) => {
+                const grade = getGrade(ex.marks);
+                const rankDisplay = (grade === 'W' || !ex.rank) ? '—' : `#${ex.rank}`;
+                const overallDisplay = (grade === 'W' || !ex.overall_rank) ? '—' : `#${ex.overall_rank}`;
+                const examLabel = ex.exam_name || `${ex.exam_type || ''} ${ex.exam_number || ''}`.trim() || `Exam ${i+1}`;
+                return `<tr>
+                    <td class="exam-num hide-mobile">${i+1}</td>
+                    <td>${examLabel}</td>
+                    <td class="marks-cell">${ex.marks}%</td>
+                    <td class="${gradeClass(grade)}">${grade}</td>
+                    <td class="rank-cell">${rankDisplay}</td>
+                    <td class="rank-cell" style="color:rgba(212,175,55,0.6)">${overallDisplay}</td>
+                </tr>`;
+            }).join('');
+        }
 
-        // Table
-        document.getElementById('tableBody').innerHTML = exams.map(ex => `
-            <tr>
-                <td class="exam-num">#${ex.num}</td>
-                <td>${ex.date}</td>
-                <td>${ex.subject}</td>
-                <td class="marks-cell">${ex.marks}%</td>
-                <td class="${getGradeClass(ex.grade)}">${ex.grade}</td>
-                <td class="rank-cell">${ex.rank}</td>
-            </tr>
-        `).join('');
-
-        // Chart
-        updateChart(exams);
-    }
-
-    function updateChart(exams) {
-        const ctx = document.getElementById('examChart').getContext('2d');
-        if (chartInstance) chartInstance.destroy();
-
-        chartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: exams.map(e => 'Exam ' + e.num),
-                datasets: [{
-                    label: 'Marks (%)',
-                    data: exams.map(e => e.marks),
-                    borderColor: '#D4AF37',
-                    backgroundColor: 'rgba(212,175,55,0.07)',
-                    borderWidth: 2.5,
-                    fill: true,
-                    tension: 0.45,
-                    pointBackgroundColor: '#D4AF37',
-                    pointBorderColor: '#070707',
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        labels: { color: 'rgba(212,175,55,0.6)', font: { size: 11, weight: '700' } }
-                    }
+        function updateChart(exams) {
+            const ctx = document.getElementById('examChart').getContext('2d');
+            if (chartInst) chartInst.destroy();
+            if (!exams.length) return;
+            const labels = exams.map((ex, i) => ex.exam_name || `${ex.exam_type} ${ex.exam_number || i+1}`);
+            const marks = exams.map(ex => ex.marks);
+            chartInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ranking Exam Marks (%)',
+                        data: marks,
+                        borderColor: '#D4AF37',
+                        backgroundColor: 'rgba(212,175,55,0.07)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#D4AF37',
+                        pointBorderColor: '#070707',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: false, min: 50, max: 100,
-                        ticks: { color: 'rgba(212,175,55,0.5)', font: { size: 11 } },
-                        grid:  { color: 'rgba(212,175,55,0.06)' }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { labels: { color: 'rgba(212,175,55,0.7)', font: { size: 9 } } },
+                        tooltip: { backgroundColor: '#111', titleColor: '#D4AF37', bodyColor: '#ccc' }
                     },
-                    x: {
-                        ticks: { color: 'rgba(212,175,55,0.5)', font: { size: 11 } },
-                        grid:  { color: 'rgba(212,175,55,0.04)' }
+                    scales: {
+                        y: { min: 0, max: 100, ticks: { color: '#aaa', stepSize: 20 }, grid: { color: 'rgba(212,175,55,0.08)' } },
+                        x: { ticks: { color: '#aaa', maxRotation: 35, autoSkip: true, font: { size: 9 } }, grid: { display: false } }
                     }
                 }
-            }
-        });
-    }
-
-    // Enter key support
-    document.getElementById('indexInput').addEventListener('keypress', e => {
-        if (e.key === 'Enter') searchResults();
-    });
-    // Navigation Controls - Fade Effect
-document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', function(e) {
-        // බාහිර ලින්ක් හෝ hash (#) ලින්ක් නම් අතහැර දමන්න
-        if (this.hostname === window.location.hostname && !this.hash) {
-            e.preventDefault();
-            let target = this.href;
-            
-            // Fade-out එක ක්‍රියාත්මක කිරීම
-            document.body.classList.add('page-transition');
-            document.body.classList.remove('page-loaded');
-            
-            // ටික වෙලාවකට පසු පිටුව මාරු කිරීම
-            setTimeout(() => {
-                window.location.href = target;
-            }, 400); // 0.4s කාලය
+            });
         }
-    });
-    
-});
 
-// පිටුවට ඇතුළු වන විට Fade-in වීම
-window.addEventListener('pageshow', function() {
-    document.body.classList.remove('page-transition');
-    document.body.classList.add('page-loaded');
-});
+        function renderStudentUI(studentData, indexNum, exams) {
+            document.getElementById('resultsSection').classList.add('active');
+            document.getElementById('noResults').style.display = 'none';
 
-document.addEventListener('DOMContentLoaded', function() {
-    requestAnimationFrame(function() {
-        document.body.classList.add('page-loaded');
-    });
-});
+            const latest = exams[exams.length - 1] || null;
+            document.getElementById('studentName').innerText = studentData.student_name || studentData.name || 'Student';
+            document.getElementById('studentIndex').innerHTML = `<i class="fa-solid fa-id-card"></i> ${indexNum}`;
+            document.getElementById('studentCity').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${studentData.city || '—'}`;
+            document.getElementById('studentBatch').innerHTML = `<i class="fa-solid fa-users"></i> ${studentData.batch || '—'} Batch`;
+            
+            if (latest) {
+                const latestGrade = getGrade(latest.marks);
+                document.getElementById('latestExamType').innerText = (latest.exam_type || 'RANKING').toUpperCase();
+                document.getElementById('latestExamName').innerText = latest.exam_name || `${latest.exam_type || ''} ${latest.exam_number || ''}`;
+                document.getElementById('latestMarks').innerText = latest.marks + '%';
+                document.getElementById('latestGrade').innerText = latestGrade;
+                document.getElementById('latestRank').innerText = (latestGrade === 'W' || !latest.rank) ? '—' : `#${latest.rank}`;
+                document.getElementById('overallRank').innerText = (latestGrade === 'W' || !latest.overall_rank) ? '—' : `#${latest.overall_rank}`;
+            } else {
+                document.getElementById('latestMarks').innerText = '—';
+                document.getElementById('latestGrade').innerText = '—';
+                document.getElementById('latestRank').innerText = '—';
+                document.getElementById('overallRank').innerText = '—';
+            }
+            renderTable(exams);
+            updateChart(exams);
+            const card = document.querySelector('.student-card-latest');
+            if(card) { card.classList.add('shine-active'); setTimeout(()=>card.classList.remove('shine-active'),1500); }
+        }
+
+        window.searchResults = async function() {
+            const indexNum = document.getElementById('indexInput').value.trim().toUpperCase();
+            if (!indexNum) {
+                document.getElementById('searchWrap').classList.add('shake');
+                setTimeout(() => document.getElementById('searchWrap').classList.remove('shake'), 400);
+                showToast('Enter index number', 'error');
+                return;
+            }
+            const btn = document.getElementById('searchBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('spinnerWrap').classList.add('active');
+
+            try {
+                const { data, error } = await sbClient
+                    .from('results')
+                    .select('*')
+                    .eq('student_index', indexNum);
+                
+                if (error) throw error;
+                if (!data || data.length === 0) throw new Error('No data');
+
+                let filtered = data;
+                if (cityParam) filtered = filtered.filter(r => String(r.city).toLowerCase() === String(cityParam).toLowerCase());
+                if (batchParam) filtered = filtered.filter(r => String(r.batch).toLowerCase() === String(batchParam).toLowerCase());
+                if (filtered.length === 0) throw new Error('City/Batch mismatch');
+
+                const studentInfo = {
+                    student_name: filtered[0].student_name,
+                    city: filtered[0].city,
+                    batch: filtered[0].batch
+                };
+                const examsList = filtered.map(rec => ({
+                    exam_name: rec.exam_name || (rec.exam_type + ' ' + (rec.exam_number || '')),
+                    exam_type: rec.exam_type,
+                    exam_number: rec.exam_number,
+                    marks: Number(rec.marks),
+                    rank: rec.rank,
+                    overall_rank: rec.overall_rank,
+                    exam_date: rec.exam_date || rec.date
+                })).sort((a,b) => (a.exam_date || '').localeCompare(b.exam_date || '') || (a.exam_number || 0) - (b.exam_number || 0));
+                
+                allExams = examsList;
+                renderStudentUI(studentInfo, indexNum, examsList);
+                showToast(`Results loaded for ${indexNum}`, '');
+            } catch(err) {
+                console.error(err);
+                showToast('No results found or connection error', 'error');
+                document.getElementById('noResults').style.display = 'block';
+                document.getElementById('resultsSection').classList.remove('active');
+                const noRes = document.getElementById('noResults');
+                noRes.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i><p>No results for <strong style="color:var(--gold)">${indexNum}</strong><br>Check index or contact admin.</p>`;
+            } finally {
+                document.getElementById('spinnerWrap').classList.remove('active');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>&nbsp; Search';
+            }
+        };
+
+        document.getElementById('indexInput').addEventListener('keypress', e => { if (e.key === 'Enter') window.searchResults(); });
+        document.getElementById('searchBtn').onclick = window.searchResults;
+        
+        function initReveal() {
+            const els = document.querySelectorAll('.reveal');
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            els.forEach(el => obs.observe(el));
+        }
+        document.addEventListener('DOMContentLoaded', initReveal);
+    })();
 </script>
 </body>
 </html>
