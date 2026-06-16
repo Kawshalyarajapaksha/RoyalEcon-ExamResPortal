@@ -391,6 +391,22 @@
         .select-card.selected .select-card-name { color: white; }
         .select-card-sub { font-size: 9px; color: rgba(255,255,255,0.2); margin-top: 6px; letter-spacing: 0.1em; }
 
+        /* MOBILE OPTIMIZATION - No transitions on mobile */
+        @media (max-width: 768px) {
+            .select-card {
+                transition: none;
+                background: rgba(255,255,255,0.015);
+            }
+            .select-card:active {
+                border-color: var(--gold);
+                background: rgba(212,175,55,0.06);
+            }
+            .select-card:hover {
+                transform: none;
+                border-color: rgba(212,175,55,0.15);
+            }
+        }
+
         .continue-btn {
             display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #BF953F, #D4AF37, #B38728);
             color: #050505; border: none; border-radius: 100px; padding: 15px 38px; font-family: 'Syncopate', sans-serif;
@@ -399,6 +415,19 @@
         }
         .continue-btn.ready { opacity: 1; pointer-events: all; }
         .continue-btn.ready:hover { transform: scale(1.04); }
+
+        /* MOBILE OPTIMIZATION - No transforms on mobile */
+        @media (max-width: 768px) {
+            .continue-btn {
+                transition: opacity 0.15s;
+            }
+            .continue-btn.ready:hover {
+                transform: none;
+            }
+            .continue-btn.ready:active {
+                opacity: 0.85;
+            }
+        }
 
         .breadcrumb { display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 48px; flex-wrap: wrap; }
         .bc-item { font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
@@ -427,6 +456,22 @@
         .index-card-name { font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.75); letter-spacing: 0.04em; }
         .index-card-meta { font-size: 9px; color: rgba(255,255,255,0.2); margin-top: 4px; letter-spacing: 0.1em; }
         .index-card-icon { font-size: 10px; color: rgba(212,175,55,0.3); }
+
+        /* MOBILE OPTIMIZATION - No transitions on index cards */
+        @media (max-width: 768px) {
+            .index-card {
+                transition: none;
+                background: rgba(255,255,255,0.01);
+            }
+            .index-card:hover {
+                border-color: rgba(212,175,55,0.12);
+                background: rgba(255,255,255,0.015);
+                transform: none;
+            }
+            .index-card:active {
+                background: rgba(212,175,55,0.04);
+            }
+        }
 
         .no-results { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.2); font-size: 12px; letter-spacing: 0.2em; }
 
@@ -609,7 +654,7 @@
                 <h2 class="heading-font text-3xl md:text-5xl font-black gold-text mb-4">TOP 10 RANKS</h2>
                 <div class="gold-divider"></div>
                 
-                <div class="exam-badge">UNIT 04 - MEGA TEST</div>
+                <div class="exam-badge">2028 | RANKING TEST 01</div>
                 
                 <p class="text-white/20 text-[10px] tracking-[0.3em] uppercase block">Economics Examination Leaderboard</p>
             </div>

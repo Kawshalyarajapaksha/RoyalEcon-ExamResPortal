@@ -1110,7 +1110,7 @@
                         </div>
                         <div class="latest-exam-tag">
                             <span id="latestExamType" class="latest-badge">RANKING EXAM</span>
-                            <span id="latestExamName">Ranking Exam 03</span>
+                            <span id="latestExamName"></span>
                         </div>
                     </div>
                 </div>
@@ -1263,7 +1263,7 @@
             if (latest) {
                 const latestGrade = getGrade(latest.marks);
                 document.getElementById('latestExamType').innerText = (latest.exam_type || 'RANKING').toUpperCase();
-                document.getElementById('latestExamName').innerText = latest.exam_name || `${latest.exam_type || ''} ${latest.exam_number || ''}`;
+                document.getElementById('latestExamName').innerText = latest.exam_number || `${latest.exam_type || ''} ${latest.exam_number || ''}`;
                 document.getElementById('latestMarks').innerText = latest.marks + '%';
                 document.getElementById('latestGrade').innerText = latestGrade;
                 document.getElementById('latestRank').innerText = (latestGrade === 'W' || !latest.rank) ? '—' : `#${latest.rank}`;
