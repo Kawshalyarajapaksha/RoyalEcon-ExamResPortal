@@ -613,10 +613,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 24px;
+            gap: 5px;
             flex-wrap: wrap;
             position: relative;
             overflow: hidden;
+            scroll-margin-top: 110px;
         }
 
         /* Gold shimmer sweep */
@@ -765,13 +766,14 @@
                 padding: 24px 20px;
                 border-left-width: 4px;
                 animation: none !important;
+                scroll-margin-top: 90px;
             }
             /* Disable shimmer on mobile for smooth performance */
             .student-card-latest::before {
                 display: none;
             }
             .latest-top {
-                text-align: center;
+                text-align: left;
                 margin-bottom: 16px;
             }
             .latest-stats {
@@ -787,7 +789,10 @@
                 word-break: keep-all;
             }
             .student-meta {
-                justify-content: center;
+                justify-content: flex-start;
+            }
+            .latest-exam-tag {
+                justify-content: flex-start;
             }
         }
 
