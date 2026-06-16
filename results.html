@@ -128,123 +128,25 @@
             }
         }
 
-        /* PAGE LOAD FADE-IN ANIMATIONS - Mobile optimized */
-        @keyframes fadeInPage {
-            0% {
-                opacity: 0;
-            }
-            100% {
+        /* WHITE FADE-IN OVERLAY */
+        @keyframes whiteScreenFadeOut {
+            from {
                 opacity: 1;
             }
-        }
-
-        @keyframes slideUpFade {
-            0% {
+            to {
                 opacity: 0;
-                transform: translate3d(0, 20px, 0);
-            }
-            100% {
-                opacity: 1;
-                transform: translate3d(0, 0, 0);
             }
         }
 
-        /* Apply fade-in to main content */
-        main {
-            animation: fadeInPage 0.8s ease-out forwards;
-            will-change: opacity;
-            backface-visibility: hidden;
-        }
-
-        .container {
-            animation: fadeInPage 0.9s ease-out 0.1s forwards;
-            will-change: opacity;
-            backface-visibility: hidden;
-            opacity: 0;
-        }
-
-        /* Staggered fade-in for sections */
-        .search-section {
-            animation: slideUpFade 0.6s ease-out forwards;
-            will-change: opacity, transform;
-            backface-visibility: hidden;
-            opacity: 0;
-        }
-
-        .student-card-latest {
-            animation: slideUpFade 0.7s ease-out 0.2s forwards;
-            will-change: opacity, transform;
-            backface-visibility: hidden;
-            opacity: 0;
-        }
-
-        .table-wrapper, .chart-wrapper {
-            animation: slideUpFade 0.7s ease-out 0.3s forwards;
-            will-change: opacity, transform;
-            backface-visibility: hidden;
-            opacity: 0;
-        }
-
-        /* Mobile: Faster animations for better performance */
-        @media (max-width: 768px) {
-            main {
-                animation-duration: 0.6s;
-            }
-
-            .container {
-                animation-duration: 0.7s;
-                animation-delay: 0.05s;
-            }
-
-            .search-section {
-                animation-duration: 0.5s;
-            }
-
-            .student-card-latest {
-                animation-duration: 0.5s;
-                animation-delay: 0.1s;
-            }
-
-            .table-wrapper, .chart-wrapper {
-                animation-duration: 0.5s;
-                animation-delay: 0.15s;
-            }
-        }
-
-        /* Ultra-small mobile: Even faster */
-        @media (max-width: 480px) {
-            main {
-                animation-duration: 0.5s;
-            }
-
-            .container {
-                animation-duration: 0.6s;
-                animation-delay: 0.05s;
-            }
-
-            .search-section,
-            .student-card-latest,
-            .table-wrapper,
-            .chart-wrapper {
-                animation-duration: 0.4s;
-            }
-
-            .student-card-latest {
-                animation-delay: 0.08s;
-            }
-
-            .table-wrapper, .chart-wrapper {
-                animation-delay: 0.12s;
-            }
-        }
-
-        /* Respect accessibility preferences */
-        @media (prefers-reduced-motion: reduce) {
-            main, .container, .search-section, .student-card-latest, .table-wrapper, .chart-wrapper {
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
+        /* White overlay that fades out on load */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgb(0, 0, 0);
+            animation: whiteScreenFadeOut 0.5s ease-in forwards;
+            z-index: 9999;
+            pointer-events: none;
         }
 
         /* Mobile orb adjustments */
