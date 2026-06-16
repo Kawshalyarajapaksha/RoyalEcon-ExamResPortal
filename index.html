@@ -51,11 +51,45 @@
             }
         }
 
-        /* ===== MOVING GOLD BACKGROUND EFFECT ===== */
+        /* ===== GRID BACKGROUND ===== */
         .static-bg {
             position: fixed; inset: 0; z-index: -1;
             background: var(--royal-black);
             overflow: hidden;
+        }
+
+        /* Gold dot-grid overlay */
+        .static-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle, rgba(212,175,55,0.18) 1px, transparent 1px);
+            background-size: 36px 36px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Vignette mask so grid fades at edges */
+        .static-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 80% at 50% 50%,
+                transparent 30%,
+                rgba(7,7,7,0.55) 65%,
+                rgba(7,7,7,0.92) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Mobile - lighter grid */
+        @media (max-width: 768px) {
+            .static-bg::before {
+                background-image:
+                    radial-gradient(circle, rgba(212,175,55,0.13) 1px, transparent 1px);
+                background-size: 28px 28px;
+            }
         }
         .bg-orb {
             position: absolute;
@@ -69,6 +103,7 @@
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             contain: layout style paint;
+            z-index: 0;
         }
         .orb-1 {
             width: 45vw; height: 45vw;
