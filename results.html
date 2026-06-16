@@ -636,6 +636,13 @@
             100% { left: 160%; }
         }
 
+        /* MOBILE OPTIMIZATION - Disable shimmer on mobile */
+        @media (max-width: 768px) {
+            .student-card-latest::before {
+                animation: none;
+            }
+        }
+
         /* Left side — student info */
         .latest-top { position: relative; z-index: 1; flex: 1; min-width: 220px; }
 
@@ -757,6 +764,20 @@
                 align-items: stretch;
                 padding: 24px 20px;
                 border-left-width: 4px;
+                animation: none !important;
+            }
+            /* Disable shimmer on mobile for smooth performance */
+            .student-card-latest::before {
+                display: none;
+            }
+            .latest-top {
+                text-align: center;
+                margin-bottom: 16px;
+            }
+            .latest-stats {
+                text-align: center;
+                padding-top: 20px;
+                border-top: 1px solid rgba(255,255,255,0.06);
             }
             .latest-stat h1 { font-size: 1.7rem; }
             .latest-divider { display: none; }
@@ -764,6 +785,9 @@
                 font-size: 0.65rem;
                 white-space: normal;
                 word-break: keep-all;
+            }
+            .student-meta {
+                justify-content: center;
             }
         }
 
@@ -1033,6 +1057,14 @@
         .shine-active {
             animation: shine 1.5s ease-in-out;
         }
+
+        /* MOBILE OPTIMIZATION - Disable shine animation */
+        @media (max-width: 768px) {
+            .shine-active {
+                animation: none;
+            }
+        }
+
         /* ===== MOBILE RESPONSIVE TWEAKS ===== */
         @media (max-width: 768px) {
             .hero-photo-wrapper { width: 140px !important; height: 140px !important; }
@@ -1277,7 +1309,15 @@
             renderTable(exams);
             updateChart(exams);
             const card = document.querySelector('.student-card-latest');
-            if(card) { card.classList.add('shine-active'); setTimeout(()=>card.classList.remove('shine-active'),1500); }
+            if(card) { 
+                card.classList.add('shine-active'); 
+                setTimeout(()=>card.classList.remove('shine-active'),1500);
+                
+                /* Auto-scroll to results card */
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
         }
 
         window.searchResults = async function() {
